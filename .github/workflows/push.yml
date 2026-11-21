@@ -1,0 +1,39 @@
+# Builds this Cog model on GitHub's computers and pushes it to Replicate.
+# Run it by hand: repository page -> Actions -> "Push to Replicate" -> Run workflow.
+# Needs the repository secret REPLICATE_CLI_AUTH_TOKEN (your Replicate API token).
+# Based on Replicate's guide "Push a model using GitHub Actions".
+
+name: Push to Replicate
+
+on:
+  workflow_dispatch:
+    inputs:
+      model_name:
+        description: 'Replicate model, like "username/model-name"'
+        required: true
+        default: "htunarkar/se_model_v2_1"
+
+jobs:
+  push_to_replicate:
+    name: Push to Replicate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: false
+          docker-images: false
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show free disk space
+        run: df -h /
+
+      - name: Setup Cog
+        uses: replicate/setup-cog@v2
+        with:
+          token: ${{ secrets.REPLICATE_CLI_AUTH_TOKEN }}
+
+      - name: Push to Replicate
+        run: cog push r8.im/${{ inputs.model_name }}

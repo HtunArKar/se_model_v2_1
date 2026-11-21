@@ -1,0 +1,5 @@
+torch==2.7.0
+torchaudio==2.7.0
+numpy==2.1.2
+einops==0.8.1
+soundfile==0.13.1

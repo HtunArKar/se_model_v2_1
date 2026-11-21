@@ -1,0 +1,11 @@
+# Replicate model: Thai speech enhancement (SE model v2_1)
+#   test on this computer :  cog predict -i audio=@<noisy.wav>
+#   upload to Replicate   :  cog push r8.im/<your-username>/<model-name>
+# Run prepare.py first: it copies the model code and checkpoint into this folder.
+
+build:
+  gpu: true                         # works on Replicate's GPU and CPU machines
+  python_version: "3.12"
+  python_requirements: requirements.txt
+
+predict: "predict.py:Predictor"
