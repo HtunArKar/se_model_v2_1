@@ -30,7 +30,7 @@ jobs:
           df -h / /mnt
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Cog
         env:
@@ -44,7 +44,12 @@ jobs:
       - name: Log in to Replicate
         env:
           REPLICATE_TOKEN: ${{ secrets.REPLICATE_CLI_AUTH_TOKEN }}
-        run: echo "$REPLICATE_TOKEN" | cog login --token-stdin
+        run: |
+          if [ -z "$REPLICATE_TOKEN" ]; then
+            echo "::error::The repository secret REPLICATE_CLI_AUTH_TOKEN is missing or empty. Add it under Settings -> Secrets and variables -> Actions -> Secrets tab -> Repository secrets."
+            exit 1
+          fi
+          echo "$REPLICATE_TOKEN" | cog login --token-stdin
 
       - name: Push to Replicate
         run: cog push "r8.im/${{ inputs.model_name }}"
